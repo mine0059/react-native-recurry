@@ -11,13 +11,17 @@ import { useUser } from '@clerk/expo';
 import dayjs from 'dayjs';
 import { styled } from 'nativewind';
 import { useState } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, Text, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
+import CreateSubscriptionModal from '@/components/CreateSubscriptionModal';
+import { useSubscriptions } from '@/context/SubscriptionContext';
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
-  const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<String | null>(null);
+  const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
+  const { subscriptions, addSubscription } = useSubscriptions();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useUser();
 
   const userAvatar = user?.imageUrl ? { uri: user.imageUrl } : images.avatar;
@@ -34,7 +38,9 @@ export default function App() {
                 <Text className="home-user-name" numberOfLines={1}>{userName}</Text>
               </View>
 
-              <Image source={icons.add} className="home-add-icon" />
+              <Pressable onPress={() => setIsModalOpen(true)}>
+                <Image source={icons.add} className="home-add-icon" />
+              </Pressable>
             </View>
 
             <View className="home-balance-card">
@@ -65,7 +71,7 @@ export default function App() {
             <ListHeading title="All Subscriptions" />
           </>
         )}
-        data={HOME_SUBSCRIPTIONS}
+        data={subscriptions}
         renderItem={({ item }) => (
           <SubscriptionCard
             {...item}
@@ -75,8 +81,8 @@ export default function App() {
               setExpandedSubscriptionId((currentId) => (currentId === item.id ? null : item.id));
               posthog.capture('subscription_details_toggled', {
                 subscription_id: item.id,
-                subscription_category: item.category,
-                subscription_status: item.status,
+                subscription_category: item.category ?? null,
+                subscription_status: item.status ?? null,
                 is_expanding: isExpanding,
               });
             }}
@@ -88,6 +94,14 @@ export default function App() {
         // keyExtractor={(item) => item.id}
         ListEmptyComponent={<Text className="home-empty-state">No Subscription yet yet</Text>}
         contentContainerClassName='pb-30'
+      />
+
+      <CreateSubscriptionModal
+        visible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreate={(newSubscription) => {
+          addSubscription(newSubscription);
+        }}
       />
     </SafeAreaView>
   );

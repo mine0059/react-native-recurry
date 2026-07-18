@@ -7,6 +7,7 @@ import { PostHogProvider } from 'posthog-react-native';
 import { useEffect, useRef } from 'react';
 
 import { posthog } from '@/lib/posthog';
+import { SubscriptionProvider } from '@/context/SubscriptionContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -60,7 +61,9 @@ export default function RootLayout() {
       }}
     >
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#fff9e3' } }} />
+        <SubscriptionProvider>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#fff9e3' } }} />
+        </SubscriptionProvider>
       </ClerkProvider>
     </PostHogProvider>
   );

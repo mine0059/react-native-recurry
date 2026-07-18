@@ -63,8 +63,8 @@ export default function SignUpPage() {
               console.log('Session current task:', session.currentTask);
               return;
             }
-            if (session?.userId) {
-              posthog.identify(session.userId);
+            if (session?.user?.id) {
+              posthog.identify(session.user.id);
               posthog.capture('sign_up_completed', {
                 verification_method: 'email_code',
               });
