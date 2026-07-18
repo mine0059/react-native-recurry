@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { posthog } from '@/lib/posthog';
+
 export default function SignUpPage() {
   const { signUp, errors, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
@@ -41,6 +43,7 @@ export default function SignUpPage() {
 
       await signUp.verifications.sendEmailCode();
     } catch (err) {
+      posthog.captureException(err instanceof Error ? err : new Error(String(err)));
       console.error('Sign-up submit error:', err);
     }
   };
@@ -60,12 +63,19 @@ export default function SignUpPage() {
               console.log('Session current task:', session.currentTask);
               return;
             }
+            if (session?.userId) {
+              posthog.identify(session.userId);
+              posthog.capture('sign_up_completed', {
+                verification_method: 'email_code',
+              });
+            }
             const url = decorateUrl('/');
             router.replace(url as any);
           },
         });
       }
     } catch (err) {
+      posthog.captureException(err instanceof Error ? err : new Error(String(err)));
       console.error('Sign-up verify error:', err);
     }
   };
@@ -75,6 +85,7 @@ export default function SignUpPage() {
     try {
       await signUp.verifications.sendEmailCode();
     } catch (err) {
+      posthog.captureException(err instanceof Error ? err : new Error(String(err)));
       console.error('Resend failed:', err);
     }
   };

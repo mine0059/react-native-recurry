@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { posthog } from '@/lib/posthog';
+
 export default function SignInPage() {
   console.log('SignInPage: Rendering!');
   const { signIn, errors, fetchStatus } = useSignIn();
@@ -46,6 +48,12 @@ export default function SignInPage() {
               console.log('Session current task:', session.currentTask);
               return;
             }
+            if (session?.userId) {
+              posthog.identify(session.userId);
+              posthog.capture('sign_in_completed', {
+                authentication_method: 'password',
+              });
+            }
             const url = decorateUrl('/');
             router.replace(url as any);
           },
@@ -59,6 +67,7 @@ export default function SignInPage() {
         }
       }
     } catch (err) {
+      posthog.captureException(err instanceof Error ? err : new Error(String(err)));
       console.error('Submit error:', err);
     }
   };
@@ -76,12 +85,19 @@ export default function SignInPage() {
               console.log('Session current task:', session.currentTask);
               return;
             }
+            if (session?.userId) {
+              posthog.identify(session.userId);
+              posthog.capture('sign_in_completed', {
+                authentication_method: 'email_code',
+              });
+            }
             const url = decorateUrl('/');
             router.replace(url as any);
           },
         });
       }
     } catch (err) {
+      posthog.captureException(err instanceof Error ? err : new Error(String(err)));
       console.error('Verify error:', err);
     }
   };

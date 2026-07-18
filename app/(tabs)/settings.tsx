@@ -4,6 +4,7 @@ import { styled } from 'nativewind';
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context';
 import { useClerk, useUser } from '@clerk/expo';
 import images from '@/constants/images';
+import { posthog } from '@/lib/posthog';
 import dayjs from 'dayjs';
 import '@/global.css';
 
@@ -23,8 +24,12 @@ const Settings = () => {
     if (isSigningOut) return;
     setIsSigningOut(true);
     try {
+      posthog.capture('sign_out_completed');
+      await posthog.flush();
       await signOut();
+      posthog.reset();
     } catch (err) {
+      posthog.captureException(err instanceof Error ? err : new Error(String(err)));
       console.error('Failed to sign out:', err);
     } finally {
       setIsSigningOut(false);
