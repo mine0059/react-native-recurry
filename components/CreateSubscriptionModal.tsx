@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { icons } from '@/constants/icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { posthog } from '@/lib/posthog';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
 import '@/global.css';
@@ -85,10 +86,17 @@ export default function CreateSubscriptionModal({
       status: 'active',
       startDate,
       renewalDate,
-      icon: icons.wallet,
+      icon: icons.plus,
       billing: frequency,
       color: CATEGORY_COLORS[category] || '#f6eecf',
     };
+
+    posthog.capture('subscription_created', {
+      subscription_name: name.trim(),
+      subscription_price: parsedPrice,
+      subscription_frequency: frequency,
+      subscription_category: category,
+    });
 
     onCreate(newSubscription);
     onClose();
