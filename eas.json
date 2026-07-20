@@ -12,10 +12,20 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bW9kZXN0LWdsb3d3b3JtLTIuY2xlcmsuYWNjb3VudHMuZGV2JA",
+        "EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN": "phc_B526HYzVSGMsrVCkeJadTfWKffCT3r8ZaDMHZu8rea7x",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bW9kZXN0LWdsb3d3b3JtLTIuY2xlcmsuYWNjb3VudHMuZGV2JA",
+        "EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN": "phc_B526HYzVSGMsrVCkeJadTfWKffCT3r8ZaDMHZu8rea7x",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+      }
     }
   },
   "submit": {
