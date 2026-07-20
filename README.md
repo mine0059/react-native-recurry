@@ -1,50 +1,85 @@
-# Welcome to your Expo app 👋
+# Recurrly 💳
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A premium, modern, and high-fidelity React Native mobile application for tracking active subscriptions and recurring expenses. Built with Expo SDK 54, Clerk authentication, Tailwind styling, and PostHog tracking.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Download & Installation
 
-   ```bash
-   npm install
-   ```
+You can download the compiled standalone APK or scan the install QR code directly from the Expo Build portal:
+👉 **[Download Recurrly APK (EAS Build Portal)](https://expo.dev/accounts/mineh/projects/react_native-recurrly/builds/61fd74b4-a914-423a-b665-202277fa6a3e)**
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 📱 Screenshots
 
-In the output, you'll find options to open the app in a
+Here is a visual walk-through of the application screens:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Sign In | Home / Dashboard | Subscriptions |
+|:---:|:---:|:---:|
+| ![Sign In](./assets/screenshots/sigin.jpeg) | ![Home](./assets/screenshots/home.jpeg) | ![Subscriptions](./assets/screenshots/subscription.jpeg) |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+| Create Subscription | Monthly Insights | Settings |
+|:---:|:---:|:---:|
+| ![Create](./assets/screenshots/create.jpeg) | ![Insights](./assets/screenshots/insight.jpeg) | ![Settings](./assets/screenshots/settings.jpeg) |
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## ✨ Features
 
-```bash
-npm run reset-project
+- **Secure Clerk Authentication**: Dynamic signup, login, email verification, and persistent session recovery with token-cached secure storage.
+- **Searchable Subscription list**: Real-time fuzzy filtering of active subscriptions by name with horizontal category chip filtering (Entertainment, AI Tools, Developer Tools, Design, Productivity, Cloud, Music, etc.).
+- **Global State Synchronization**: Shared state provider syncing data in real-time across Home, Subscriptions, and Insights screens.
+- **Dynamic Weekly Insights**: Proportional daily spending bar chart showing real aggregated expenses based on actual active subscription renewal dates.
+- **Smooth Page Transitions**: Custom layouts that eliminate white-screen flashes by honoring the cream-colored dark/light styling.
+- **PostHog Analytics**: Tracks subscription events (`subscription_created`, etc.) dynamically for product insights.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Framework**: React Native & Expo SDK 54 (File-based Routing, Safe Area Layouts)
+- **Authentication**: Clerk v6 (`@clerk/expo` and `@clerk/shared`)
+- **Styling**: NativeWind (Tailwind CSS v4 engine)
+- **Date Management**: Day.js
+- **Database / State**: React Context API (Global Provider)
+- **Analytics**: PostHog React Native
+- **Build System**: EAS (Expo Application Services) CLI
+
+---
+
+## 💻 Local Development
+
+### 1. Prerequisite Configuration
+Create a `.env` file in the root directory:
+```env
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key
+EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN=your-posthog-project-token
+EXPO_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Run the App
+Install local node dependencies and start the Metro development server:
+```bash
+# Install dependencies
+npm install
 
-## Learn more
+# Run on Android Emulator or connected physical device
+npx expo start -c
+```
+*Press `a` in the terminal to open on Android.*
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🛠️ Build Commands
 
-## Join the community
+All production releases are configured via `eas.json` inside the project root:
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+* **Build Android APK (Testing)**:
+  ```bash
+  eas build --platform android --profile preview
+  ```
+* **Build Android App Bundle (AAB - Play Store Submission)**:
+  ```bash
+  eas build --platform android --profile production
+  ```
